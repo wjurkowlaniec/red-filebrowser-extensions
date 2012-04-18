@@ -1,0 +1,132 @@
+{% extends "filebrowser/version.html" %}
+
+<!-- LOADING -->
+{% load i18n adminmedia fb_tags fb_versions %}
+
+<!-- STYLESHEETS -->
+{% block stylesheets %}
+    {{ block.super }}
+    <!-- JCrop -->
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}cropper/css/JCrop/jquery.Jcrop.css" />
+{% endblock %}
+
+<!-- JAVASCRIPTS -->
+{% block javascripts %}
+    {{ block.super }}
+
+    <!-- JCrop -->
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}cropper/js/JCrop/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}cropper/js/JCrop/jquery.Jcrop.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}cropper/js/image_crop.js"></script>
+
+    <script language='javascript'>
+        (function($) {
+		    $(document).ready(function() {
+                var versions = {
+                    {% for version in editable_versions %}
+                        '{{ version }}' : {
+                            {% version_object fileobject version as image_version %}
+                            {% version_setting version %}
+                            'name' : '{{ version_setting.verbose_name }}',
+                            'width' : {% if version_setting.width %}'{{ version_setting.width }}'{% else %}null{% endif %},
+                            'height' : {% if version_setting.height %}'{{ version_setting.height }}'{% else %}null{% endif %},
+                            'url' : '{{ image_version.url }}'
+                        }{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                }
+
+                function change_version() {
+                    destroy_jcrop();
+                    var val = $('select#version_selector').val();
+                    var obj = versions[val];
+                    var html = '<strong>'+obj.name+'</strong><br/>';
+                    if (obj.width != null) {
+                        html = html+'{% trans "Width" %}: '+obj.width+'</br>';
+                    }
+                    if (obj.height != null) {
+                        html = html+'{% trans "Height" %}: '+obj.height;
+                    }
+                    $('#cropped').html('<img id="cropped_image" src="'+obj.url+'?v='+randomString(5)+'" />');
+                    initCropFor(val, 'original', 'cropped_image', '_form', obj.width, obj.height);
+                    $('#version_description').html(html);
+                }
+
+                $("select#version_selector").change(change_version);
+                $("#original").load(function() {
+			        change_version();
+                });
+		    });
+    	})(django.jQuery);
+    </script>
+
+    {{ media }}
+{% endblock %}
+
+{% block breadcrumbs %}{% include "filebrowser/include/breadcrumbs.html" %}{% endblock %}
+
+<!-- CONTENT -->
+{% block content %}
+<div id="changelist" class="container-full">
+
+    <h2>{% trans "Custom crop your various image sizes. Use the dropdown to select version to edit. Click and drag on the original image to select a new crop. Clicking save will save the new crop for the image your are currently viewing. If you clear the selection or navigate to a different image your changes will be discarded." %}</h2>
+
+    <div class="version_selector_bar">
+	    <label for="version_selector">Image version:</label>
+	    <select id="version_selector">
+            {% for v in editable_versions %}
+                {% version_setting v %}
+			    <option value="{{ v }}"{% if version == v %} SELECTED{% endif %}>{{ version_setting.verbose_name }}</option>
+            {% endfor %}
+	    </select>
+    </div>
+
+    <div class="module changelist-results">
+        <table cellspacing="0">
+            <thead>
+                <tr>
+
+                <!-- Filename/Dimensions  -->
+                <th width="10%">{% trans 'Name' %}</th>
+
+                <!-- JCrop -->
+                <th>{% trans 'Original Image' %}</th>
+
+                <!-- Version -->
+                <th>{% trans 'Image Version' %}</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+
+                <!-- Filename / Dimensions  -->
+                <td>
+                    <div id="version_description"></div>
+                </td>
+
+                 <!-- Original Image (JCrop) -->
+                <td>
+                    <img src='{{fileobject.url}}' id='original' />
+                </td>
+
+                <!-- Version -->
+                <td><div style='overflow: hidden;' id='cropped'><img src="" id='cropped_image'/></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form method='POST' action=''>
+            <div id='_form' style='display:hidden'>
+                {% csrf_token %}
+                {{ form }}
+            </div>
+             <div id="submit" class="module footer">
+                <ul class="submit-row" style='border-top: 0'>
+                    <li class="submit-button-container"><input type="submit" class="default" name="_save" value="Save"/></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

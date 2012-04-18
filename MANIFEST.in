@@ -1,0 +1,4 @@
+include LICENSE
+include README.md
+recursive-include crop_filebrowser/static *
+recursive-include crop_filebrowser/templates *
