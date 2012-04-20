@@ -46,6 +46,11 @@
                     if (obj.height != null) {
                         html = html+'{% trans "Height" %}: '+obj.height;
                     }
+                    $('#cropped').css({
+                        width: 'auto',
+                        height: 'auto',
+                        display: 'block'
+                    });
                     $('#cropped').html('<img id="cropped_image" src="'+obj.url+'?v='+randomString(5)+'" />');
                     initCropFor(val, 'original', 'cropped_image', '_form', obj.width, obj.height);
                     $('#version_description').html(html);

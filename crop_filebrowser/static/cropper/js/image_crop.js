@@ -29,12 +29,10 @@ function initCropFor(version, original_id, cropped_id, form_id, crop_width, crop
     var parent = img.parent();
 
     var v_src = img.attr('src');
-    var v_width = img.width();
-    var v_height = img.height();
 
     var original_width = original.width();
     var scale = original_width > 800 ? 800 / original_width : 1;
-    console.log(scale);
+
     original.width(original_width * scale)
     original_width = original.width()
 
