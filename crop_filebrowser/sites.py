@@ -104,12 +104,9 @@ class CropFileBrowserSite(sites.FileBrowserSite):
             if form.is_valid():
                 if version in versions:
                    self._save_crop(fileobject.path, **form.cleaned_data)
-                qs = {
-                    'dir' : query.get('dir', ''),
-                    'filename' : query.get('filename', ''),
-                    'version' : version
-                }
-                path = '%s?%s' % (request.path, urllib.urlencode(qs))
+                qs = request.GET.copy()
+                qs['version'] = version
+                path = '%s?%s' % (request.path, qs.urlencode())
                 return HttpResponseRedirect(path)
         else:
             form = ImageCropDataForm(initial={'version' : version})
