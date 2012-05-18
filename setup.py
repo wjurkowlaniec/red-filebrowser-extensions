@@ -3,9 +3,9 @@ from setuptools import setup, find_packages
 setup(
     name='red-filebrowser-extensions',
     version='0.1',
-    description='Django filebrowser with cropping.',
-    author='RED Interactive (geeks@ff0000.com)',
-    author_email='geeks@ff0000.com',
+    description='Django filebrowser extensions.',
+    author='RED Interactive (opensource@ff0000.com)',
+    author_email='opensource@ff0000.com',
     url='',
     download_url='',
     packages=find_packages(),
