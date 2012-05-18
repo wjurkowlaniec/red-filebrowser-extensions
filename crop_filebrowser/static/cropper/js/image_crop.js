@@ -1,4 +1,5 @@
 var jcrop_api = null;
+var scale = null;
 
 function randomString(string_length) {
 	var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -31,11 +32,12 @@ function initCropFor(version, original_id, cropped_id, form_id, crop_width, crop
     var v_src = img.attr('src');
 
     var original_width = original.width();
-    var scale = original_width > 800 ? 800 / original_width : 1;
+    if (scale == null) {
+        scale = original_width > 800 ? 800 / original_width : 1;
+        original.width(original_width * scale)
+    }
 
-    original.width(original_width * scale)
     original_width = original.width()
-
     var original_height = original.height();
 
     var form = $('#'+form_id);
