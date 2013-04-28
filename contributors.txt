@@ -1,17 +1,16 @@
 Much love to following.
 
 Maintainer:
-Peter Volpe
+Wojciech Jurkowlaniec
 
 Commiters:
 Harrington Joseph
 
 Contributors:
+Peter Volpe
 
 Thanks:
 The Filebrowser Team
 David Issacson - Initial implementation 
-
-
 
 
