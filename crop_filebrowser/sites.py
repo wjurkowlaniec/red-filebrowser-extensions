@@ -67,7 +67,7 @@ class CropFileBrowserSite(sites.FileBrowserSite):
                 im.save(tmpfile, format=Image.EXTENSION[ext.lower()], quality=fb_settings.VERSION_QUALITY,
                             optimize=(ext != '.gif'))
             except IOError:
-                im.save(tmpfile, format=Image.EXTENSION[ext], quality=fb_settings.VERSION_QUALITY)
+                im.save(tmpfile, format=Image.EXTENSION[ext.lower()], quality=fb_settings.VERSION_QUALITY)
 
             # Remove the old version, if there's any
             if version_path != self.storage.get_available_name(version_path):
