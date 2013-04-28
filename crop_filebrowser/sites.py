@@ -40,6 +40,8 @@ class CropFileBrowserSite(sites.FileBrowserSite):
     def _do_crop(self, im, x=None, x2=None, y=None, y2=None, width=None, height=None):
         im = im.crop((x, y, x2, y2))
         x, y = [float(v) for v in im.size]
+        if type(width)==str: width=float(width)
+        if type(height)==str: height=float(height)
         if width:
             r = width / x
         elif height:
